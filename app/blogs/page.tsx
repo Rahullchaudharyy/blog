@@ -25,9 +25,11 @@ const PageComponent = () => {
       name: string;
       __typename:string;
     };
+    category?: string;
     previewImage?: {
       url: string;
     };
+    description:string
   }
   const [data, setData] = useState<BlogPost[]>([]);
   const [originalData, setOriginalData] = useState<BlogPost[]>([]); 
@@ -36,7 +38,10 @@ const PageComponent = () => {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
-  
+  const textCutter = (text:string,limit:number)=>{
+    const word = text.split(" ");
+    return word.length > limit ? `${word.slice(0,limit).join(" ")}... read more`:text;
+  }
   
 
   const getBlogs = async () => {
@@ -55,6 +60,7 @@ const PageComponent = () => {
             previewImage {
               url
             }
+              description
           }
         }
       `,
@@ -149,9 +155,10 @@ const PageComponent = () => {
             </>
           ):data?.map((blog) => (
             <BlogCard
+            description={textCutter(blog?.description,10)}
               id={blog?.documentId}
               key={blog?.documentId}
-              category={blog?.blog_category?.name}
+              category={blog?.blog_category?.name ?? " "}
               image={"https://cms.grey-to-green.com"+blog?.previewImage?.url}
               title={blog?.title}
             />
