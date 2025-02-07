@@ -2,7 +2,7 @@
 
 import { gql } from "@apollo/client";
 import client from "@/lib/apollo-client";
-import { useCallback, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import BlogCard from "./_Components/BlogCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -45,7 +45,7 @@ const Page = () => {
       : text;
   };
 
-  const getBlogs = useCallback(async () => {
+  const getBlogs = async () => {
     try {
       setLoading(true);
       const { data } = await client.query({
@@ -82,7 +82,7 @@ const Page = () => {
     } finally {
       setLoading(false);
     }
-  },[page]);
+  }
 
   const handleSearch = (searchValue: string) => {
     setSearchQuery(searchValue);
@@ -100,7 +100,7 @@ const Page = () => {
 
   useEffect(() => {
     getBlogs();
-  });
+  },[page]);
 
   return (
     <div className="flex flex-col flex-wrap p-9 gap-5 justify-center items-center">
