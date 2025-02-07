@@ -3,14 +3,27 @@ import { gql } from "@apollo/client";
 import client from "@/lib/apollo-client";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
-const page = () => {
+const Page = () => {
+  interface BlogPost {
+    title: string;
+    content: string;
+    blog_category?: {
+      name: string;
+    };
+    description: string;
+    previewImage?: {
+      url: string;
+    };
+  }
+  
   const pathname = usePathname();
   const documentId = pathname.split("/").pop();
-  console.log(documentId);
+  // console.log(documentId);
 
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<BlogPost | null>(null);
 
   const getBlog = async () => {
     if (!documentId) return;
@@ -46,7 +59,9 @@ const page = () => {
 
   useEffect(() => {
     getBlog();
-  }, [documentId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  
 
   if (loading) {
     return (
@@ -65,7 +80,7 @@ const page = () => {
   return (
     <div className="p-6  flex justify-center items-center flex-col ">
       <div className="w-full md:h-96 h-44 relative overflow-hidden">
-        <img
+        <Image
           alt={data?.title}
           width={2000}
           height={700}
@@ -76,7 +91,7 @@ const page = () => {
         <div className="w-full  md:h-96 h-44 bg-main/20 backdrop-blur-sm relative" />
       </div>
       <div className="container flex flex-col justify-center items-center  md:-mt-64 -mt-28 z-20 relative">
-        <img
+        <Image
           alt={data?.title}
           width={2000}
           height={2000}
@@ -86,16 +101,16 @@ const page = () => {
         />
 
         <div className="max-w-[1000px]">
-          <h1 className="md:text-3xl font-bold text-center py-4">{data.title}</h1>
+          <h1 className="md:text-3xl font-bold text-center py-4">{data?.title}</h1>
 
-          <p className="text-xl font-semibold py-7 text-gray-500 ">{data.blog_category?.name}</p>
+          <p className="text-xl font-semibold py-7 text-gray-500 ">{data?.blog_category?.name}</p>
 
-          <p className="text-gray-700">{data.description}</p>
-          <div dangerouslySetInnerHTML={{ __html: data.content }}></div>
+          <p className="text-gray-700">{data?.description}</p>
+          <div dangerouslySetInnerHTML={{ __html: data?.content }}></div>
         </div>
       </div>
     </div>
   );
 };
 
-export default page;
+export default Page;

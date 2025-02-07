@@ -8,7 +8,7 @@ interface BlogCardProps {
     image: string;
     category: string;
     description: string;
-    id:any
+    id:string
   }
 
 export default function BlogCard({ title, image, category, description,id }:BlogCardProps) {
